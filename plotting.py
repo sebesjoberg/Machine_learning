@@ -49,7 +49,7 @@ def get_diffs(year_m,year_f,amount_m,amount_f):
         i = index_of(year,year_f)
         if i>=0:
             years.append(year)
-            diffs.append((amount_f[i]/amount_m[index])*100)
+            diffs.append((amount_f[i]/(amount_m[index]+amount_f[i]))*100)
     return years,diffs
 
 
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     year_f = res[0]
     amount_f = res[1]
     year_diff,amount_diff = get_diffs(year_m,year_f,amount_m,amount_f)
-    plt.plot(year_diff,amount_diff, label = "Diff%")
+    plt.plot(year_diff,amount_diff, label = "Female%_of_roles")
     plt.plot(year_m,amount_m, label = "Male")
     plt.plot(year_f,amount_f, label = "Female")
     plt.xlabel("year")
