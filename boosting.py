@@ -19,8 +19,8 @@ def get_weights(label):
 def boosting_trainer(features,label,x_test,y_test):
     
     model = XGBClassifier(n_estimators=10000,
-                          objective="binary:logistic",random_state=42,early_stopping_rounds=10, scale_pos_weight=get_weights(label),
-                          subsample=0.5, eval_metric="auc",
+                          objective="binary:logistic",random_state=0,early_stopping_rounds=10, scale_pos_weight=get_weights(label),
+                          subsample=0.5, eval_metric="mae",
                           learning_rate=0.5)
     
     model.fit(features,label, eval_set=[(x_test,y_test)])
