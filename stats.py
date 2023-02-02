@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from csv_reader import csv_reader
 from more_itertools import sort_together
-def plot_year_actor(df):
+def year_lead(df):
     cl = df.get('Lead')
     year = df.get('Year')
     year_countlabel_m = {}
@@ -52,16 +52,13 @@ def get_diffs(year_m,year_f,amount_m,amount_f):
             diffs.append((amount_f[i]/(amount_m[index]+amount_f[i]))*100)
     return years,diffs
 
-
-
-if __name__ == "__main__":
-    year_m,year_f,amount_m,amount_f = plot_year_actor(csv_reader("data/train.csv"))
+def plot_year_leads():
+    year_m,year_f,amount_m,amount_f = year_lead(csv_reader("data/train.csv"))
     res = sort_together([year_m, amount_m])
     year_m = res[0]
     amount_m = res[1]
-    res = sort_together([year_f, amount_f])
-    year_f = res[0]
-    amount_f = res[1]
+    year_f,amount_f = sort_together([year_f, amount_f])
+     
     year_diff,amount_diff = get_diffs(year_m,year_f,amount_m,amount_f)
     plt.plot(year_diff,amount_diff, label = "Female%_of_roles")
     plt.plot(year_m,amount_m, label = "Male")
@@ -70,3 +67,36 @@ if __name__ == "__main__":
     plt.xlabel("Leads")
     plt.legend()
     plt.show()
+
+def calculate_money_lead():
+    df = csv_reader("data/train.csv")
+    money_male = []
+    money_female = []
+    df = df[['Gross', 'Lead']]
+    df = list(df.values)
+    for d in df:
+        if d[1] == "Female":
+            money_female.append(d[0])
+        else:
+            money_male.append(d[0])
+    return sum(money_male)/len(money_male),sum(money_female)/len(money_female)
+def calculate_percentage_gender():
+    df = csv_reader("data/train.csv")
+    gender = df.get('Lead')
+    male = 0
+    female = 0
+    for g in gender:
+        if g == "Female":
+            female +=1
+        else:
+            male +=1
+    return (male/(female+male))*100,(female/(female+male))*100
+
+if __name__ == "__main__":
+    
+    perc_male,perc_female = calculate_percentage_gender()
+    print(perc_male,"are male and",perc_female,"are female")
+    mean_male,mean_female = calculate_money_lead()
+    print(mean_male,"is the average gross with male",mean_female,"is the average with female")
+    print("this means a film with a male lead makes",((mean_male/(mean_female))*100)-100,"percent more than a movie with a female lead")
+    plot_year_leads()

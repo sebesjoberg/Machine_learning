@@ -18,7 +18,7 @@ def get_weights(label):
 
 def boosting_trainer(features,label):
     
-    model = XGBClassifier(n_estimators=100,
+    model = XGBClassifier(n_estimators=1000,
                           objective="binary:logistic", scale_pos_weight=get_weights(label),
                           booster = 'dart',
                           subsample=0.75, 
@@ -40,15 +40,14 @@ def boosting_trainer(features,label):
 
 if __name__ == '__main__':
     x_train, x_test, y_train, y_test, x_val = getdata()
-    acc = []
-    for r in range(100):
 
-        model = boosting_trainer(x_train,y_train)
-        acc.append(tester(model,x_test,y_test)[1])
-    print(sum(acc)/100)
     
-    #pred = model.predict(x_val) 
-    #save_predictions(pred)
+            
+    model = boosting_trainer(x_train,y_train)
+    print(tester(model,x_test,y_test))
+    
+    pred = model.predict(x_val) 
+    save_predictions(pred)
     
     
     
