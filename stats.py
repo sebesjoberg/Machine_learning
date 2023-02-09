@@ -92,11 +92,19 @@ def calculate_percentage_gender():
             male +=1
     return (male/(female+male))*100,(female/(female+male))*100
 
-if __name__ == "__main__":
+def total_talk():
+    df = csv_reader("data/train.csv")
     
-    perc_male,perc_female = calculate_percentage_gender()
-    print(perc_male,"are male and",perc_female,"are female")
+    w = df.get("Number words female")
+    m = df.get("Number words male")
+    return sum(w),sum(m)
+
+if __name__ == "__main__":
+    talk = total_talk()
+    print("words female",talk[0],"words male",talk[1],"men talk x percent more",talk[1]/talk[0])
+    #perc_male,perc_female = calculate_percentage_gender()
+    #print(perc_male,"are male and",perc_female,"are female")
     mean_male,mean_female = calculate_money_lead()
     print(mean_male,"is the average gross with male",mean_female,"is the average with female")
     print("this means a film with a male lead makes",((mean_male/(mean_female))*100)-100,"percent more than a movie with a female lead")
-    plot_year_leads()
+    #plot_year_leads()

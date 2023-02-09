@@ -1,8 +1,8 @@
-import os 
+
 from csv_reader import csv_reader
 from minmax import minmax
 from sklearn.model_selection import train_test_split
-from imblearn.over_sampling import RandomOverSampler,SMOTE
+
 
 
 def getdata():
