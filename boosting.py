@@ -1,8 +1,9 @@
 from getdata import getdata
 from tester import tester
-from xgboost import XGBClassifier
+
 from save import save_predictions
 from sklearn.model_selection import GridSearchCV
+from sklearn.ensemble import AdaBoostClassifier
 #0=male 1=female
 def get_weights(label):
     zero = 0
@@ -18,17 +19,8 @@ def get_weights(label):
 
 def boosting_trainer(features,label):
     
-    model = XGBClassifier(n_estimators=1000,
-                          objective="binary:logistic", scale_pos_weight=get_weights(label),
-                          booster = 'dart',
-                          subsample=0.75, 
-                          learning_rate=0.1,
-                          colsample_bytree=0.75,
-                          gamma=0.1,max_delta_step=1,
-                          max_depth=7,
-                          min_child_weight=1,
-                          )
-    
+    model =  AdaBoostClassifier(n_estimators=200, random_state=0,learning_rate=1,algorithm='SAMME.R')
+    print(model.get_params())
     model.fit(features,label)
     
     return model
@@ -43,22 +35,15 @@ def boosting_trainer(features,label):
 
 def boosting_tuner(features,label):
     params = {
-        'booster':['gbtree','dart'],
-        'min_child_weight': [0.1, 0.5, 1.0],#0-inf
-        'gamma': [0.1, 0.5, 1,],#0-inf
-        'subsample': [0.5, 0.75, 1.0],#0-1
-        'colsample_bytree': [0.5, 0.75, 1.0],#0-1
-        'max_depth': [3,5,7],#1.inf
-        'learning_rate': [0.01,0.1,1.0],#0-1
-        'max_delta_step': [0, 0.5, 1]
+        'algorithm': ['SAMME.R','SAMME'],
+        
+        'learning_rate': [0.01,0.1,0.25,0.5,1],
+         'n_estimators': [10,100,200,350,500]
         
         }
     
-    model = XGBClassifier(n_estimators=100,
-                          objective="binary:logistic",random_state=0, scale_pos_weight=get_weights(label)
-                          
-                          )
-    grid = GridSearchCV(model,param_grid=params,verbose=3,n_jobs=-1,scoring='accuracy')
+    model = AdaBoostClassifier(random_state=0)
+    grid = GridSearchCV(model,param_grid=params,verbose=3,n_jobs=-1,scoring='balanced_accuracy',cv=10)
     grid.fit(features,label)
     
     return grid
@@ -79,8 +64,6 @@ if __name__ == '__main__':
     
         print('\n Best estimator:')
         print(grid.best_estimator_)
-    
-        print(grid.best_score_ * 2 - 1)
         print('\n Best hyperparameters:')
         print(grid.best_params_)
         model = grid.best_estimator_
@@ -92,8 +75,8 @@ if __name__ == '__main__':
         model = boosting_trainer(x_train,y_train)
         print(tester(model,x_test,y_test))
         
-        pred = model.predict(x_val) 
-        save_predictions(pred)
+        #pred = model.predict(x_val) 
+        #save_predictions(pred)
         
     
     
