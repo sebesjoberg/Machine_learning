@@ -1,2 +1,3 @@
+from sklearn.preprocessing import MinMaxScaler
 def minmax(s):
-    return s/s.max()
+    return MinMaxScaler().fit_transform(s)

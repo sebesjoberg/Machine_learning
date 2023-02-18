@@ -1,9 +1,10 @@
 from getdata import getdata
 from tester import tester
-
+from sklearn.tree import ExtraTreeClassifier
 from save import save_predictions
 from sklearn.model_selection import GridSearchCV
-from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import AdaBoostClassifier, GradientBoostingClassifier
+
 #0=male 1=female
 def get_weights(label):
     zero = 0
@@ -19,7 +20,7 @@ def get_weights(label):
 
 def boosting_trainer(features,label):
     
-    model =  AdaBoostClassifier(n_estimators=200, random_state=0,learning_rate=1,algorithm='SAMME.R')
+    model =  AdaBoostClassifier(n_estimators=2000, random_state=0,learning_rate=1)
     print(model.get_params())
     model.fit(features,label)
     
@@ -35,10 +36,10 @@ def boosting_trainer(features,label):
 
 def boosting_tuner(features,label):
     params = {
-        'algorithm': ['SAMME.R','SAMME'],
+        'algorithm': ['SAMME.R'],
         
         'learning_rate': [0.01,0.1,0.25,0.5,1],
-         'n_estimators': [10,100,200,350,500]
+         'n_estimators': [10,100,500,1000,2000]
         
         }
     
