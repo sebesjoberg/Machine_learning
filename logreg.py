@@ -14,7 +14,7 @@ def model_trainer(x_train, y_train):
 def model_tuner(x_train,y_train):
     model = skl_lm.LogisticRegression(solver='saga',random_state=0,max_iter=10000)
     params = {
-        #'penalty': ['l1','l2'],
+       
         'penalty': ['elasticnet'],
         'l1_ratio': np.linspace(0,1,num=30),
         'C': np.logspace(-2, 3, 20)
