@@ -39,7 +39,7 @@ def boosting_tuner(features,label):
         
         
         'learning_rate': [0.01,0.1,0.25,0.5,0.75,1],
-         'n_estimators': [10,100,500,1000,2000,5000,10000]
+         'n_estimators': [10,100,500,1000,2000,5000]
         
         }
     
@@ -56,7 +56,7 @@ def boosting_tuner(features,label):
     
 
 if __name__ == '__main__':
-    tune = True
+    tune = False
 
     x_train, x_test, y_train, y_test, x_val = getdata()
 
